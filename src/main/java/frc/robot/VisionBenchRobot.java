@@ -44,14 +44,16 @@ public final class VisionBenchRobot {
   static final String CAMERA_2_DEVICE = "/dev/v4l/by-id/usb-from-visor-cameras-2-video-index0";
 
   /**
-   * A ThriftyCam at the size and rate it runs at, from {@code visor cameras}: 1600x1304 at 60, its
-   * 80° lens taken as diagonal. No lens calibration yet, so Visor sends corners and no poses.
+   * A ThriftyCam at the size and rate it runs at, from {@code visor cameras}: 1600x1304 at 60. Its
+   * lens is sold as 80°, but the four cameras' calibrations (2026-11-04, {@link ThriftyCamLenses})
+   * put it at 73° to 74° across the diagonal, so 73°. No lens calibration on these two yet: they
+   * take one from {@link ThriftyCamLenses} once it's known which cameras they are.
    */
   static final CameraConfig.Sensor THRIFTYCAM =
       CameraConfig.Sensor.builder()
           .widthPixels(1600)
           .heightPixels(1304)
-          .fieldOfView(Degrees.of(80))
+          .fieldOfView(Degrees.of(73))
           .fieldOfViewAcross(CameraConfig.Across.DIAGONAL)
           .frameRate(Hertz.of(60))
           .latency(Milliseconds.of(20))
