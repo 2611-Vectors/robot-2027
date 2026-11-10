@@ -55,7 +55,7 @@ class DrivingRobotTest {
   @Test
   void itsLimitsAreTheBenchs() {
     DrivetrainControl.Limits limits = DrivingRobot.CONFIG.drivetrain().limits();
-    assertThat(limits).isSameAs(DrivingRobot.BENCH_LIMITS);
+    assertThat(limits).isEqualTo(DrivingRobot.BENCH.limits());
     assertThat(limits.driveStatorCurrent().in(Amps)).isLessThanOrEqualTo(20);
     assertThat(limits.driveSupplyCurrent().in(Amps)).isLessThanOrEqualTo(20);
     assertThat(limits.steerStatorCurrent().in(Amps)).isLessThanOrEqualTo(20);

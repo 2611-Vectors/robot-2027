@@ -9,7 +9,6 @@ import static org.wpilib.units.Units.KilogramSquareMeters;
 import static org.wpilib.units.Units.MetersPerSecond;
 import static org.wpilib.units.Units.Rotations;
 import static org.wpilib.units.Units.RotationsPerSecond;
-import static org.wpilib.units.Units.Seconds;
 
 import com.michaelgrundvig.frc.localization.EstimatorConfig;
 import com.michaelgrundvig.frc.localization.VisionConfig;
@@ -177,42 +176,29 @@ public final class DrivingRobot {
       RobotDefinition.builder().name("driving").body(BODY).drivetrain(DRIVETRAIN).build();
 
   /**
-   * Current limits for the bench: low on purpose, while the chassis is on blocks. A wheel spinning
-   * in the air needs only a few amps, so these leave plenty, and a jammed wheel or a wrong setting
-   * can't draw much. Raise them on purpose before driving on the floor (the guide's robot uses 30 A
-   * on the drive's stator and 40 A on the steering's: {@code ExampleRobot}).
+   * How the chassis is driven on the bench, from the template's defaults, its limits low on
+   * purpose while the chassis is on blocks. A wheel spinning in the air needs only a few amps, so
+   * 20 A leaves plenty, and a jammed wheel or a wrong setting can't draw much. Raise them on
+   * purpose before driving on the floor (the template's defaults are 30 A on the drive's stator and
+   * 40 A on the steering's: {@code DrivetrainControl.defaults()}). The top speeds are low too: 1.5
+   * meters a second, and half a turn a second.
    *
-   * <p>The top speeds are low too: 1.5 meters a second, and half a turn a second.
+   * <p>How hard the motors work to follow what they're asked. The drive's kV is left to the
+   * modules: what the X60 and the gearing should need, worked out from their numbers. Its kS and
+   * kP are the 2026 robot's Tuner X gains, changed into this program's units (per meter a second).
+   * The steering's are the 2026 robot's too, Tuner X's stock, which are the defaults. Tune them on
+   * the chassis, live from Pitwall's Tune view, once tuning is switched on there.
    */
-  public static final DrivetrainControl.Limits BENCH_LIMITS =
-      DrivetrainControl.Limits.builder()
-          .driveStatorCurrent(Amps.of(20))
-          .driveSupplyCurrent(Amps.of(20))
-          .driveSupplyLowerCurrent(Amps.of(10))
-          .driveSupplyLowerTime(Seconds.of(1))
-          .steerStatorCurrent(Amps.of(20))
-          .maxLinearSpeed(MetersPerSecond.of(1.5))
-          .maxAngularSpeed(RotationsPerSecond.of(0.5))
-          .build();
-
-  /**
-   * How hard the motors work to follow what they're asked. The drive's kV is what the X60 and the
-   * gearing should need, worked out from their numbers. Its kS and kP, and the steering's kP and
-   * kD, are the 2026 robot's Tuner X gains, changed into this program's units (Tuner X's are per
-   * turn; these are per meter and per radian). Tune them on the chassis, live from Pitwall's Tune
-   * view, once tuning is switched on there.
-   */
-  public static final DrivetrainControl.Gains GAINS =
-      DrivetrainControl.Gains.builder()
-          .driveKs(0.14)
-          .driveKv(MODULE.idealDriveKv())
-          .driveKp(0.3)
-          .steerKp(16.0)
-          .steerKd(0.08)
-          .skewLookahead(Seconds.of(0.03))
-          .headingKp(5.0)
-          .translationKp(3.0)
-          .build();
+  public static final DrivetrainControl BENCH =
+      DrivetrainControl.defaults()
+          .withDriveStatorLimit(Amps.of(20))
+          .withDriveSupplyLimit(Amps.of(20))
+          .withDriveSupplyLowerLimit(Amps.of(10))
+          .withSteerStatorLimit(Amps.of(20))
+          .withMaxSpeed(MetersPerSecond.of(1.5))
+          .withMaxSpeed(RotationsPerSecond.of(0.5))
+          .withDriveKs(0.14)
+          .withDriveKp(0.3);
 
   /**
    * The chassis as the program runs it: {@code ./gradlew run -Probot=driving} chooses it by name
@@ -223,8 +209,7 @@ public final class DrivingRobot {
       RobotConfig.builder()
           .definition(
               ROBOT.with(
-                  DRIVETRAIN.control(
-                      DrivetrainControl.builder().limits(BENCH_LIMITS).gains(GAINS).build())))
+                  DRIVETRAIN.control(BENCH)))
           .vision(VisionConfig.DEFAULTS)
           .estimator(EstimatorConfig.DEFAULTS)
           .build();
