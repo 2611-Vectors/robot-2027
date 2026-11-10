@@ -33,10 +33,10 @@ import org.wpilib.units.measure.Angle;
  *
  * <p>TODO(team): THIS IS A PLACEHOLDER. Every value in the block below is the template's, copied
  * from a 2026 robot's code, not this robot's. The team has the real ones from its bench session
- * (CAN IDs, the CANivore's name, the four zeros, the drive inversions, the gear ratio, the steering
- * motor) and brings them over here. Until then this program won't drive the real robot correctly:
- * its wheels will point the wrong way. Remove this TODO once every value in the block says
- * "Checked".
+ * (CAN IDs, the CANivore's name, the four zeros, the motors' and CANcoders' directions, the gear
+ * ratio, the steering motor) and brings them over here. Until then this program won't drive the
+ * real robot correctly: its wheels will point the wrong way. Remove this TODO once every value in
+ * the block says "Checked".
  *
  * <p>Run it in the simulator: {@code ./gradlew run}. Drive the real robot from a laptop, with its
  * CANivore plugged into the laptop: {@code ./gradlew run -PhwSim} (runtime/docs/bench.md says how,
