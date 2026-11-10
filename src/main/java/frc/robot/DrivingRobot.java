@@ -124,7 +124,7 @@ public final class DrivingRobot {
           .withDriveSupplyLowerLimit(Amps.of(10))
           .withSteerStatorLimit(Amps.of(20))
           .withMaxSpeed(MetersPerSecond.of(1.5))
-          .withMaxSpeed(RotationsPerSecond.of(0.5))
+          .withMaxTurnRate(RotationsPerSecond.of(0.5))
           .withDriveKs(0.14)
           .withDriveKp(0.3);
 
