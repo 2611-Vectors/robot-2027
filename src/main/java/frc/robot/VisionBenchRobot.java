@@ -46,8 +46,7 @@ public final class VisionBenchRobot {
   /**
    * A ThriftyCam at the size and rate it runs at, from {@code visor cameras}: 1600x1304 at 60. Its
    * lens is sold as 80°, but the four cameras' calibrations (2026-11-04, {@link ThriftyCamLenses})
-   * put it at 73° to 74° across the diagonal, so 73°. No lens calibration on these two yet: they
-   * take one from {@link ThriftyCamLenses} once it's known which cameras they are.
+   * put it at 73° to 74° across the diagonal, so 73°.
    */
   static final CameraConfig.Sensor THRIFTYCAM =
       CameraConfig.Sensor.builder()
@@ -60,11 +59,19 @@ public final class VisionBenchRobot {
           .sightRange(Meters.of(7))
           .build();
 
-  /** The first camera, placed as if at the front left, facing forward. A guess: see above. */
-  static final CameraConfig CAMERA_1 = camera("one", Inches.of(4), CAMERA_1_DEVICE);
+  // The two cameras are the ones labelled 1 and 2, plugged into the boards on 2026-11-04, and each
+  // takes its own lens from ThriftyCamLenses. The four lenses' centers differ by up to about 100
+  // pixels, about 4° of pointing, so a camera given another's lens points its poses that far off:
+  // the number on the camera's label has to be the lens it's given here. Swap a camera, and change
+  // its lens with it.
 
-  /** The second camera, as if at the front right. */
-  static final CameraConfig CAMERA_2 = camera("two", Inches.of(-4), CAMERA_2_DEVICE);
+  /** Camera 1, placed as if at the front left, facing forward. A guess: see above. */
+  static final CameraConfig CAMERA_1 =
+      camera("one", Inches.of(4), CAMERA_1_DEVICE, ThriftyCamLenses.CAM_1);
+
+  /** Camera 2, as if at the front right. */
+  static final CameraConfig CAMERA_2 =
+      camera("two", Inches.of(-4), CAMERA_2_DEVICE, ThriftyCamLenses.CAM_2);
 
   public static final RobotConfig CONFIG =
       RobotConfigBuilder.builder(DrivingRobot.CONFIG)
@@ -77,7 +84,7 @@ public final class VisionBenchRobot {
           .build();
 
   private static CameraConfig camera(
-      String name, org.wpilib.units.measure.Distance left, String device) {
+      String name, org.wpilib.units.measure.Distance left, String device, Software.Lens lens) {
     return CameraConfig.builder()
         .name(name)
         .forward(Inches.of(12))
@@ -88,7 +95,7 @@ public final class VisionBenchRobot {
         .yaw(Degrees.of(0))
         .sensor(THRIFTYCAM)
         .noiseScale(1.0)
-        .software(Software.visor().device(device).build())
+        .software(Software.visor().device(device).lens(lens).build())
         .build();
   }
 }

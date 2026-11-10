@@ -1,0 +1,53 @@
+{
+  "about": "The four ThriftyCams' lens calibrations, as Visor's tools/calibrate.py solved them (2026-11-09, the 2026-11-04 sessions solved again with k3 held at 0), one entry per camera by the number on its label. ThriftyCamLensesTest checks ThriftyCamLenses against these numbers. When a camera is calibrated again, copy its new numbers here and there.",
+  "cameras": [
+    {
+      "camera": 1,
+      "verdict": "provisional",
+      "solved": "cam1: 50 views, RMS 0.548 px, provisional: edges not covered, k3 held at 0 (its corners can't decide k3)",
+      "width": 1600,
+      "height": 1304,
+      "fx": 1385.453346,
+      "fy": 1387.693951,
+      "cx": 841.748551,
+      "cy": 688.089816,
+      "distortion": [-0.0379933425, -0.00505548711, 0.000259603563, -0.00242699815, 0.0]
+    },
+    {
+      "camera": 2,
+      "verdict": "provisional",
+      "solved": "cam2: 60 views, RMS 0.498 px, provisional: edges not covered, k3 held at 0 (its corners can't decide k3)",
+      "width": 1600,
+      "height": 1304,
+      "fx": 1388.745831,
+      "fy": 1391.114571,
+      "cx": 794.961953,
+      "cy": 645.687058,
+      "distortion": [-0.0213614477, -0.00264023068, -0.000586039413, -0.00138722088, 0.0]
+    },
+    {
+      "camera": 3,
+      "verdict": "accepted",
+      "solved": "cam3: 50 views, RMS 0.666 px, accepted, k3 held at 0 (not needed)",
+      "width": 1600,
+      "height": 1304,
+      "fx": 1363.716868,
+      "fy": 1365.258832,
+      "cx": 774.129216,
+      "cy": 651.470545,
+      "distortion": [-0.044568638, 0.0204994724, -0.000271843966, 5.40701723e-05, 0.0]
+    },
+    {
+      "camera": 4,
+      "verdict": "provisional",
+      "solved": "cam4: 50 views, RMS 0.627 px, provisional: edges not covered, k3 held at 0 (its corners can't decide k3)",
+      "width": 1600,
+      "height": 1304,
+      "fx": 1380.886019,
+      "fy": 1381.847188,
+      "cx": 744.466772,
+      "cy": 564.815704,
+      "distortion": [-0.0231583075, -0.0103007031, -0.00173185198, -0.00157842134, 0.0]
+    }
+  ]
+}
