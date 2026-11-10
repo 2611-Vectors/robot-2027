@@ -176,18 +176,18 @@ public final class DrivingRobot {
       RobotDefinition.builder().name("driving").body(BODY).drivetrain(DRIVETRAIN).build();
 
   /**
-   * How the chassis is driven on the bench, from the template's defaults, its limits low on
-   * purpose while the chassis is on blocks. A wheel spinning in the air needs only a few amps, so
-   * 20 A leaves plenty, and a jammed wheel or a wrong setting can't draw much. Raise them on
-   * purpose before driving on the floor (the template's defaults are 30 A on the drive's stator and
-   * 40 A on the steering's: {@code DrivetrainControl.defaults()}). The top speeds are low too: 1.5
-   * meters a second, and half a turn a second.
+   * How the chassis is driven on the bench, from the template's defaults, its limits low on purpose
+   * while the chassis is on blocks. A wheel spinning in the air needs only a few amps, so 20 A
+   * leaves plenty, and a jammed wheel or a wrong setting can't draw much. Raise them on purpose
+   * before driving on the floor (the template's defaults are 30 A on the drive's stator and 40 A on
+   * the steering's: {@code DrivetrainControl.defaults()}). The top speeds are low too: 1.5 meters a
+   * second, and half a turn a second.
    *
    * <p>How hard the motors work to follow what they're asked. The drive's kV is left to the
-   * modules: what the X60 and the gearing should need, worked out from their numbers. Its kS and
-   * kP are the 2026 robot's Tuner X gains, changed into this program's units (per meter a second).
-   * The steering's are the 2026 robot's too, Tuner X's stock, which are the defaults. Tune them on
-   * the chassis, live from Pitwall's Tune view, once tuning is switched on there.
+   * modules: what the X60 and the gearing should need, worked out from their numbers. Its kS and kP
+   * are the 2026 robot's Tuner X gains, changed into this program's units (per meter a second). The
+   * steering's are the 2026 robot's too, Tuner X's stock, which are the defaults. Tune them on the
+   * chassis, live from Pitwall's Tune view, once tuning is switched on there.
    */
   public static final DrivetrainControl BENCH =
       DrivetrainControl.defaults()
@@ -207,9 +207,7 @@ public final class DrivingRobot {
    */
   public static final RobotConfig CONFIG =
       RobotConfig.builder()
-          .definition(
-              ROBOT.with(
-                  DRIVETRAIN.control(BENCH)))
+          .definition(ROBOT.with(DRIVETRAIN.control(BENCH)))
           .vision(VisionConfig.DEFAULTS)
           .estimator(EstimatorConfig.DEFAULTS)
           .build();
