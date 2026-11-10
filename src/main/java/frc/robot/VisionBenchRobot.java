@@ -8,7 +8,6 @@ import static org.wpilib.units.Units.Milliseconds;
 
 import com.michaelgrundvig.frc.runtime.RobotConfig;
 import com.michaelgrundvig.frc.runtime.RobotConfigBuilder;
-import com.michaelgrundvig.frc.spotter.manager.BoardDefinition;
 import com.michaelgrundvig.frc.world.robot.CameraConfig;
 import com.michaelgrundvig.frc.world.robot.CameraConfig.Software;
 import com.michaelgrundvig.frc.world.robot.RobotDefinitionBuilder;
@@ -31,11 +30,14 @@ import java.util.List;
 public final class VisionBenchRobot {
   private VisionBenchRobot() {}
 
-  /** {@code vision-1}, by its Spotter agent's address, and the pack the robot pushes it. */
-  static final BoardDefinition VISION_1 = new BoardDefinition("10.26.11.11", List.of("visor"));
+  /**
+   * {@code vision-1}, by its Spotter agent's address. The robot pushes it Visor's pack itself,
+   * since cameras on it are on Visor.
+   */
+  static final String VISION_1 = "10.26.11.11";
 
   /** {@code vision-2}. */
-  static final BoardDefinition VISION_2 = new BoardDefinition("10.26.11.12", List.of("visor"));
+  static final String VISION_2 = "10.26.11.12";
 
   // TODO(team): each camera's device, from `visor cameras` on the board: its /dev/v4l/by-id/ name,
   // or its by-path/ one. These placeholders match no camera, so until they're filled in the robot
