@@ -8,10 +8,12 @@ one version, so this repository holds only what's the team's: which robots it ha
 do.
 
 > **TODO(team): the driving robot's values are placeholders.** `DrivingRobot.java`'s block of
-> values to check (CAN IDs, the CANivore's name, the four module zeros, the drive inversions, the
-> gear ratio, the steering motor) is still the template's, copied from a 2026 robot. The team has
-> the real ones from its bench session and brings them over. Until then, the program won't drive
-> the real robot correctly.
+> values to check (CAN IDs, the CANivore's name, the four module zeros, the motors' and CANcoders'
+> directions, the gear ratio, the steering motor) is still the template's, copied from a 2026
+> robot. The team has the real ones from its bench session and brings them over, with a record of
+> the session in `src/test/resources/driving-tuner-x.json` for the tests to check them against
+> (`DrivingRobotRecordTest`). Until then, the program won't drive the real robot correctly, and
+> `./gradlew deploy` refuses while any value is still marked unconfirmed.
 
 ## The robots
 

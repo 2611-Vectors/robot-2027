@@ -57,7 +57,14 @@ public final class DrivingRobot {
   // Every value in this block is copied from the 2026 robot's code, not read off this robot, so
   // each one is marked "Unconfirmed". Check each in Phoenix Tuner X: its device list shows every
   // device's CAN ID and the CANivore it's on. If a value differs, change it here. Once a value is
-  // checked, change its "Unconfirmed" to "Checked" and the date.
+  // checked, change its "Unconfirmed" to "Checked" and the date. A deploy refuses while any value
+  // here is still "Unconfirmed:" (./gradlew unconfirmedValues lists them); the simulator and ci
+  // don't mind.
+  //
+  // Write what the session read into src/test/resources/driving-tuner-x.json as well, the record
+  // DrivingRobotRecordTest compares every ID, zero and direction here against (that test says how
+  // the record looks). DrivingRobotWiringTest checks each module is built from its own corner's
+  // values.
 
   /** Unconfirmed: the CANivore's name, as Tuner X shows it. */
   static final String CANIVORE_NAME = "canivore";
@@ -82,10 +89,12 @@ public final class DrivingRobot {
   static final int BACK_RIGHT_STEER_ID = 28;
   static final int BACK_RIGHT_CANCODER_ID = 14;
 
-  // Unconfirmed: each module's zero, the CANcoder offset that makes it read 0 with its wheel
-  // pointing straight ahead. These are the 2026 robot's, so they will be wrong here: measure them
-  // again. In Tuner X, set the CANcoder's magnet offset to 0, point the wheel straight ahead (all
-  // four wheels turned the same way round), read its absolute position, and write minus that here.
+  // Unconfirmed: each module's zero, the CANcoder offset in rotations that makes it read 0 with its
+  // wheel pointing straight ahead. These are the 2026 robot's, so they will be wrong here: measure
+  // them again, by the one procedure, "Zeroing a swerve module" in the runtime's guide
+  // (runtime/docs/tuner-x.md). It reads Drive/Module<name>/SteerAngleRotations from the robot's
+  // log, with every wheel squared straight ahead, and the new zero is the one here minus that
+  // reading.
   static final Angle FRONT_LEFT_ZERO = Rotations.of(0.10693359375);
   static final Angle FRONT_RIGHT_ZERO = Rotations.of(-0.031494140625);
   static final Angle BACK_LEFT_ZERO = Rotations.of(-0.12939453125);
@@ -95,6 +104,16 @@ public final class DrivingRobot {
   // every wheel should roll forward. A wheel that rolls backward is on a side to flip here.
   static final boolean LEFT_DRIVES_INVERTED = false;
   static final boolean RIGHT_DRIVES_INVERTED = true;
+
+  // Unconfirmed: whether the steering motors run backward. With the chassis on blocks and enabled,
+  // ask for a small turn: every module should settle at it. One that spins or shakes has its
+  // steering the wrong way round: flip this.
+  static final boolean STEERING_INVERTED = false;
+
+  // Unconfirmed: whether the CANcoders count backward. With the robot disabled, turn each module
+  // counterclockwise by hand, seen from above: SteerAngleRotations should grow. If it shrinks,
+  // flip this.
+  static final boolean CANCODERS_INVERTED = false;
 
   // Unconfirmed: the drive gear ratio, motor turns for one turn of the wheel. An MK5n's ratio is
   // set by the pinion gear on its drive motor. This is the 2026 robot's, 5.27 to 1; the other 2026
@@ -161,15 +180,15 @@ public final class DrivingRobot {
   /** The CANivore everything is on. */
   public static final CanBus CANIVORE = CanBus.canivore(CANIVORE_NAME);
 
-  /** The front left module's motors and CANcoder. Its steering motor isn't turned around. */
+  /** The front left module's motors and CANcoder. */
   private static final SwerveWiring.ModuleWiring FRONT_LEFT =
       SwerveWiring.ModuleWiring.builder()
           .driveId(FRONT_LEFT_DRIVE_ID)
           .steerId(FRONT_LEFT_STEER_ID)
           .encoderOffset(FRONT_LEFT_ZERO)
           .driveInverted(LEFT_DRIVES_INVERTED)
-          .steerInverted(false)
-          .encoderInverted(false)
+          .steerInverted(STEERING_INVERTED)
+          .encoderInverted(CANCODERS_INVERTED)
           .encoderId(FRONT_LEFT_CANCODER_ID)
           .build();
 
@@ -180,8 +199,8 @@ public final class DrivingRobot {
           .steerId(FRONT_RIGHT_STEER_ID)
           .encoderOffset(FRONT_RIGHT_ZERO)
           .driveInverted(RIGHT_DRIVES_INVERTED)
-          .steerInverted(false)
-          .encoderInverted(false)
+          .steerInverted(STEERING_INVERTED)
+          .encoderInverted(CANCODERS_INVERTED)
           .encoderId(FRONT_RIGHT_CANCODER_ID)
           .build();
 
@@ -192,8 +211,8 @@ public final class DrivingRobot {
           .steerId(BACK_LEFT_STEER_ID)
           .encoderOffset(BACK_LEFT_ZERO)
           .driveInverted(LEFT_DRIVES_INVERTED)
-          .steerInverted(false)
-          .encoderInverted(false)
+          .steerInverted(STEERING_INVERTED)
+          .encoderInverted(CANCODERS_INVERTED)
           .encoderId(BACK_LEFT_CANCODER_ID)
           .build();
 
@@ -204,8 +223,8 @@ public final class DrivingRobot {
           .steerId(BACK_RIGHT_STEER_ID)
           .encoderOffset(BACK_RIGHT_ZERO)
           .driveInverted(RIGHT_DRIVES_INVERTED)
-          .steerInverted(false)
-          .encoderInverted(false)
+          .steerInverted(STEERING_INVERTED)
+          .encoderInverted(CANCODERS_INVERTED)
           .encoderId(BACK_RIGHT_CANCODER_ID)
           .build();
 

@@ -5,8 +5,6 @@ import static org.wpilib.units.Units.Amps;
 import static org.wpilib.units.Units.MetersPerSecond;
 
 import com.michaelgrundvig.frc.world.game.Rebuilt;
-import com.michaelgrundvig.frc.world.robot.CanBus;
-import com.michaelgrundvig.frc.world.robot.CanDevice;
 import com.michaelgrundvig.frc.world.robot.DrivetrainControl;
 import com.michaelgrundvig.frc.world.robot.Motor;
 import java.io.IOException;
@@ -18,8 +16,10 @@ import org.junit.jupiter.api.Test;
 /**
  * The swerve test chassis ({@link DrivingRobot}): it passes the robot model's checks (building it
  * is the check, and {@link RobotsTest} builds every robot), and it's fit for the bench: a
- * drivetrain alone, on one CANivore, with no Phoenix Pro feature, low limits, and every value still
- * to be checked on the real chassis in its one block.
+ * drivetrain alone, with no Phoenix Pro feature, low limits, and every value still to be checked on
+ * the real chassis in its one block. Its devices and their settings, corner by corner, are {@link
+ * DrivingRobotWiringTest}'s; whether the block's values are the chassis's own is {@link
+ * DrivingRobotRecordTest}'s.
  */
 class DrivingRobotTest {
   /** The file a student opens: the test reads it as they do. */
@@ -60,35 +60,6 @@ class DrivingRobotTest {
     assertThat(limits.driveSupplyCurrent().in(Amps)).isLessThanOrEqualTo(20);
     assertThat(limits.steerStatorCurrent().in(Amps)).isLessThanOrEqualTo(20);
     assertThat(limits.maxLinearSpeed().in(MetersPerSecond)).isLessThanOrEqualTo(1.5);
-  }
-
-  /**
-   * Every device is on the CANivore the block names, at an ID the block names, so changing the
-   * block changes the robot: the Pigeon 2, then each module's drive, steering and CANcoder.
-   */
-  @Test
-  void everyDeviceIsTheBlocks() {
-    List<CanDevice> devices = DrivingRobot.ROBOT.devices();
-
-    assertThat(devices)
-        .extracting(CanDevice::bus)
-        .containsOnly(new CanBus.Canivore(DrivingRobot.CANIVORE_NAME));
-    assertThat(devices)
-        .extracting(CanDevice::id)
-        .containsExactly(
-            DrivingRobot.PIGEON_ID,
-            DrivingRobot.FRONT_LEFT_DRIVE_ID,
-            DrivingRobot.FRONT_LEFT_STEER_ID,
-            DrivingRobot.FRONT_LEFT_CANCODER_ID,
-            DrivingRobot.FRONT_RIGHT_DRIVE_ID,
-            DrivingRobot.FRONT_RIGHT_STEER_ID,
-            DrivingRobot.FRONT_RIGHT_CANCODER_ID,
-            DrivingRobot.BACK_LEFT_DRIVE_ID,
-            DrivingRobot.BACK_LEFT_STEER_ID,
-            DrivingRobot.BACK_LEFT_CANCODER_ID,
-            DrivingRobot.BACK_RIGHT_DRIVE_ID,
-            DrivingRobot.BACK_RIGHT_STEER_ID,
-            DrivingRobot.BACK_RIGHT_CANCODER_ID);
   }
 
   /**

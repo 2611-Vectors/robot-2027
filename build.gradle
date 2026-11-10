@@ -269,6 +269,39 @@ tasks.matching { it.name == "deploy" }.configureEach {
     dependsOn "ci"
 }
 
+// Nor while a value the robot needs is still marked "Unconfirmed:" in the robot program, such as
+// the driving robot's CAN IDs, zeros and directions, copied from a 2026 robot until the team checks
+// them on the chassis (DrivingRobot's block). The simulator and ci don't need them checked; only a
+// deploy, to a robot that would run them, does. ./gradlew unconfirmedValues lists them.
+def unconfirmedValues = tasks.register("unconfirmedValues") {
+    group = "verification"
+    description = "Fails while any value in the robot program is still marked \"Unconfirmed:\"."
+    def sources = fileTree("src/main/java") { include "**/*.java" }
+    def root = projectDir
+    inputs.files(sources).withPropertyName("sources").withPathSensitivity(PathSensitivity.RELATIVE)
+    doLast {
+        def marked = []
+        sources.files.sort().each { file ->
+            file.readLines().eachWithIndex { line, index ->
+                if (line.contains("Unconfirmed:")) {
+                    marked << "  ${root.toPath().relativize(file.toPath())}:${index + 1}: ${line.strip()}"
+                }
+            }
+        }
+        if (!marked.isEmpty()) {
+            throw new GradleException(
+            "No deploy while values are unconfirmed: the robot would run them as they are. ${marked.size()} lines" +
+            " mark values not yet checked on the robot. Check each, then change its \"Unconfirmed:\" to \"Checked\" and the date:\n" +
+            marked.join("\n"))
+        }
+    }
+}
+// Before every step of a deploy, from finding the robot on, so nothing is copied to it first:
+// GradleRIO's deploy runs each step as a task of its own, and "deploy" itself comes last.
+tasks.matching { it.name.startsWith("deploy") || it.name.startsWith("discover") }.configureEach {
+    dependsOn unconfirmedValues
+}
+
 // Store the team number: ./gradlew setTeamNumber -PteamNumber=NNNN
 tasks.register("setTeamNumber") {
     group = "DeployUtils" // beside deploy
