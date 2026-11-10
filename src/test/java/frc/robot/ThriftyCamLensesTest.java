@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
@@ -85,10 +86,10 @@ class ThriftyCamLensesTest {
         (Map<String, Object>)
             Jsonb.instance().type(Object.class).fromJson(Files.readString(RECORD));
     List<Calibrated> calibrations = new ArrayList<>();
-    for (Object entry : (List<Object>) record.get("cameras")) {
+    for (Object entry : (List<Object>) field(record, "cameras")) {
       Map<String, Object> camera = (Map<String, Object>) entry;
       List<Double> distortion = new ArrayList<>();
-      for (Object term : (List<Object>) camera.get("distortion")) {
+      for (Object term : (List<Object>) field(camera, "distortion")) {
         distortion.add(((Number) term).doubleValue());
       }
       Lens lens =
@@ -103,12 +104,17 @@ class ThriftyCamLensesTest {
               .build();
       calibrations.add(
           new Calibrated(
-              number(camera, "camera").intValue(), (String) camera.get("verdict"), lens));
+              number(camera, "camera").intValue(), (String) field(camera, "verdict"), lens));
     }
     return calibrations;
   }
 
   private static Number number(Map<String, Object> camera, String name) {
-    return (Number) camera.get(name);
+    return (Number) field(camera, name);
+  }
+
+  /** One of the record's fields, which every entry has. */
+  private static Object field(Map<String, Object> values, String name) {
+    return Objects.requireNonNull(values.get(name), () -> "the record has no " + name);
   }
 }

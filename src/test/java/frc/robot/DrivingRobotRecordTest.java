@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -77,9 +78,9 @@ class DrivingRobotRecordTest {
     SwerveWiring wiring = DrivingRobot.DRIVETRAIN.wiring().orElseThrow();
 
     assertThat((String) record.get("taken")).as("the session's date").isNotBlank();
-    assertThat(wiring.canBus()).isEqualTo(CanBus.canivore((String) record.get("canivore")));
+    assertThat(wiring.canBus()).isEqualTo(CanBus.canivore((String) field(record, "canivore")));
     assertThat(number(record, "pigeon").intValue()).as("the Pigeon 2").isEqualTo(wiring.gyroId());
-    List<Object> modules = (List<Object>) record.get("modules");
+    List<Object> modules = (List<Object>) field(record, "modules");
     assertThat(modules).as("the record's modules").hasSameSizeAs(CORNERS);
     for (int i = 0; i < CORNERS.size(); i++) {
       Map<String, Object> measured = (Map<String, Object>) modules.get(i);
@@ -112,6 +113,11 @@ class DrivingRobotRecordTest {
   }
 
   private static Number number(Map<String, Object> values, String name) {
-    return (Number) values.get(name);
+    return (Number) field(values, name);
+  }
+
+  /** One of the record's fields, which the record must have. */
+  private static Object field(Map<String, Object> values, String name) {
+    return Objects.requireNonNull(values.get(name), () -> "the record has no " + name);
   }
 }
