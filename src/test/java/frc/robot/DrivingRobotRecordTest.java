@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.wpilib.units.Units.Rotations;
 
 import com.michaelgrundvig.frc.world.robot.CanBus;
+import com.michaelgrundvig.frc.world.robot.MechanismWiring;
 import com.michaelgrundvig.frc.world.robot.SwerveWiring;
 import io.avaje.jsonb.Jsonb;
 import java.io.IOException;
@@ -21,7 +22,7 @@ import org.junit.jupiter.api.Test;
  * The driving robot's values against the record of the team's Tuner X session on the chassis:
  * {@code src/test/resources/driving-tuner-x.json}, written by hand from what Tuner X and the
  * zeroing procedure showed, never from {@link DrivingRobot}. Once it's there, a value typed wrong
- * in the block, or into the wrong module, fails here.
+ * in the drivetrain, or into the wrong corner, fails here.
  *
  * <p>Until the session happens, the record is absent: {@code theTunerXRecordIsAbsent} passes and
  * says so by its name, and the comparison is skipped. Once it's written, that test is skipped and
@@ -42,8 +43,9 @@ import org.junit.jupiter.api.Test;
  * }
  * }</pre>
  *
- * <p>With the record in and this test green, change each value's "Unconfirmed:" in the block to
- * "Checked" and the date: a deploy refuses while any value is still unconfirmed.
+ * <p>With the record in and this test green, change each value's "Unconfirmed:", in the block and
+ * above each corner, to "Checked" and the date: a deploy refuses while any value is still
+ * unconfirmed. A direction recorded {@code true} is a device written {@code .clockwise()}.
  */
 class DrivingRobotRecordTest {
   /** The record of the Tuner X session. */
@@ -79,30 +81,33 @@ class DrivingRobotRecordTest {
 
     assertThat((String) record.get("taken")).as("the session's date").isNotBlank();
     assertThat(wiring.canBus()).isEqualTo(CanBus.canivore((String) field(record, "canivore")));
-    assertThat(number(record, "pigeon").intValue()).as("the Pigeon 2").isEqualTo(wiring.gyroId());
+    assertThat(number(record, "pigeon").intValue())
+        .as("the Pigeon 2")
+        .isEqualTo(wiring.gyro().id());
     List<Object> modules = (List<Object>) field(record, "modules");
     assertThat(modules).as("the record's modules").hasSameSizeAs(CORNERS);
     for (int i = 0; i < CORNERS.size(); i++) {
       Map<String, Object> measured = (Map<String, Object>) modules.get(i);
       SwerveWiring.ModuleWiring module = wiring.modules().get(i);
+      MechanismWiring.Cancoder cancoder = (MechanismWiring.Cancoder) module.encoder();
       String corner = CORNERS.get(i);
 
       assertThat(measured.get("corner")).as("module %d", i).isEqualTo(corner);
-      assertThat(module.driveId()).as("the %s's drive", corner).isEqualTo(id(measured, "drive"));
-      assertThat(module.steerId()).as("the %s's steering", corner).isEqualTo(id(measured, "steer"));
-      assertThat(module.encoderId())
-          .as("the %s's CANcoder", corner)
-          .contains(id(measured, "cancoder"));
-      assertThat(module.encoderOffset().in(Rotations))
+      assertThat(module.drive().id()).as("the %s's drive", corner).isEqualTo(id(measured, "drive"));
+      assertThat(module.steering().id())
+          .as("the %s's steering", corner)
+          .isEqualTo(id(measured, "steer"));
+      assertThat(cancoder.id()).as("the %s's CANcoder", corner).isEqualTo(id(measured, "cancoder"));
+      assertThat(cancoder.offset().in(Rotations))
           .as("the %s's zero", corner)
           .isCloseTo(number(measured, "zeroRotations").doubleValue(), within(1e-9));
-      assertThat(module.driveInverted())
+      assertThat(module.drive().turnsClockwise())
           .as("the %s's drive's direction", corner)
           .isEqualTo(measured.get("driveInverted"));
-      assertThat(module.steerInverted())
+      assertThat(module.steering().turnsClockwise())
           .as("the %s's steering's direction", corner)
           .isEqualTo(measured.get("steerInverted"));
-      assertThat(module.encoderInverted())
+      assertThat(cancoder.turnsClockwise())
           .as("the %s's CANcoder's direction", corner)
           .isEqualTo(measured.get("cancoderInverted"));
     }

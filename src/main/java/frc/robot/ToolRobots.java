@@ -33,6 +33,6 @@ public final class ToolRobots implements RobotCatalog {
         definition.body(),
         definition.drivetrain(),
         definition.cameras(),
-        Optional.of(definition.imus().gyro().position()));
+        Optional.of(definition.gyroMount().position()));
   }
 }
