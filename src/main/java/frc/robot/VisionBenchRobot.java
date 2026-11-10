@@ -79,7 +79,7 @@ public final class VisionBenchRobot {
         .tiltUp(Degrees.of(0))
         .yaw(Degrees.of(0))
         .sensor(THRIFTYCAM)
-        .software(Software.visor().device(device).lens(lens).build())
+        .software(Software.visor().device(device).lens(lens))
         .build();
   }
 }
