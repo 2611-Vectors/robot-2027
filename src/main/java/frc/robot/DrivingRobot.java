@@ -10,8 +10,6 @@ import static org.wpilib.units.Units.MetersPerSecond;
 import static org.wpilib.units.Units.Rotations;
 import static org.wpilib.units.Units.RotationsPerSecond;
 
-import com.michaelgrundvig.frc.localization.EstimatorConfig;
-import com.michaelgrundvig.frc.localization.VisionConfig;
 import com.michaelgrundvig.frc.runtime.RobotConfig;
 import com.michaelgrundvig.frc.world.robot.Body;
 import com.michaelgrundvig.frc.world.robot.CanBus;
@@ -80,29 +78,6 @@ public final class DrivingRobot {
   // ==== END OF THE VALUES TO CHECK ===============================================================
 
   /**
-   * The frame: about 26 inches square, from where the 2026 robot's code puts its modules, 10.375
-   * inches from the middle each way, with a module's wheel 2.625 inches in from the frame's edge.
-   * Measure it and change it if it's different.
-   *
-   * <p>It has no bumpers on the bench, but the robot's model needs them, so these are the 3 inch
-   * bumpers it would wear. Only the simulator uses them, to know how big the robot is.
-   *
-   * <p>It hasn't been weighed yet, so the weight is left out and the program takes it as heavy as
-   * the season allows, and says so at startup. Weigh it with its battery on, and add what the scale
-   * says: {@code .weight(Pounds.of(42.5))}. How hard it is to spin isn't measured either, so the
-   * model works it out as a solid box's of that weight and size.
-   */
-  public static final Body BODY =
-      Body.builder()
-          .frameLength(Inches.of(26))
-          .frameWidth(Inches.of(26))
-          .overallHeight(Inches.of(8))
-          .bumperThickness(Inches.of(3))
-          .bumperBottom(Inches.of(2.5))
-          .bumperTop(Inches.of(5.75))
-          .build();
-
-  /**
    * One SDS MK5n module, all four the same. A Kraken X60 drives the wheel, without FOC: FOC needs a
    * Phoenix Pro license on the motor. The steering turns 287/11 (about 26.09) times for one turn of
    * the module, as SDS says. The wheels are 4 inches across, so 2 inches from the middle to the
@@ -127,53 +102,6 @@ public final class DrivingRobot {
           .driveInertia(KilogramSquareMeters.of(0.01))
           .steerInertia(KilogramSquareMeters.of(0.01))
           .build();
-
-  /**
-   * The four modules, 10.375 inches forward or back of the middle and 10.375 inches left or right,
-   * and how they're wired, all on the CANivore: the Pigeon 2, then each corner's drive motor's
-   * Talon FX, its steering motor's, and its CANcoder with its zero. The Pigeon reads turns at their
-   * true size until the ten-spin check measures it (runtime/docs/calibration.md): {@code
-   * PIGEON_2.can(CANIVORE, 1).yawScale(1.0012)}.
-   *
-   * <p>Check every ID in Tuner X. Measure each zero by "Zeroing a swerve module"
-   * (runtime/docs/tuner-x.md). Directions, chassis on blocks: driving forward slowly, every wheel
-   * rolls forward; asked for a small turn, every module settles; turned counterclockwise by hand,
-   * seen from above, SteerAngleRotations grows. A device that fails its check gets {@code
-   * .clockwise()}, or loses it.
-   */
-  public static final DrivetrainGeometry DRIVETRAIN =
-      DrivetrainGeometry.uniform(MODULE, Inches.of(10.375), Inches.of(10.375))
-          // Unconfirmed: the Pigeon 2's CAN ID.
-          .gyro(PIGEON_2.can(CANIVORE, 1))
-          // Unconfirmed: the steering motors' and the CANcoders' directions (none clockwise).
-          // Unconfirmed: front left's three IDs, its zero, and its drive's direction.
-          .frontLeft(
-              TALON_FX.can(CANIVORE, 23),
-              TALON_FX.can(CANIVORE, 24),
-              CANCODER.can(CANIVORE, 12).offset(Rotations.of(0.10693359375)))
-          // Unconfirmed: front right's three IDs, its zero, and its drive's direction.
-          .frontRight(
-              TALON_FX.can(CANIVORE, 21).clockwise(),
-              TALON_FX.can(CANIVORE, 22),
-              CANCODER.can(CANIVORE, 11).offset(Rotations.of(-0.031494140625)))
-          // Unconfirmed: back left's three IDs, its zero, and its drive's direction.
-          .backLeft(
-              TALON_FX.can(CANIVORE, 25),
-              TALON_FX.can(CANIVORE, 26),
-              CANCODER.can(CANIVORE, 13).offset(Rotations.of(-0.12939453125)))
-          // Unconfirmed: back right's three IDs, its zero, and its drive's direction.
-          .backRight(
-              TALON_FX.can(CANIVORE, 27).clockwise(),
-              TALON_FX.can(CANIVORE, 28),
-              CANCODER.can(CANIVORE, 14).offset(Rotations.of(-0.38427734375)));
-
-  /**
-   * The chassis as a whole: its frame and its drivetrain. Its Pigeon 2 is the drivetrain's, taken
-   * as sitting in the middle, level, until its place is measured: {@code PIGEON_2.can(CANIVORE,
-   * 1).at(mount)}. No backup IMU: that's Systemcore's own, and the chassis has no Systemcore yet.
-   */
-  public static final RobotDefinition ROBOT =
-      RobotDefinition.builder().name("driving").body(BODY).drivetrain(DRIVETRAIN).build();
 
   /**
    * How the chassis is driven on the bench, from the template's defaults, its limits low on purpose
@@ -201,14 +129,77 @@ public final class DrivingRobot {
           .withDriveKp(0.3);
 
   /**
+   * The four modules, 10.375 inches forward or back of the middle and 10.375 inches left or right,
+   * and how they're wired, all on the CANivore: the Pigeon 2, then each corner's drive motor's
+   * Talon FX, its steering motor's, and its CANcoder with its zero. The Pigeon reads turns at their
+   * true size until the ten-spin check measures it (runtime/docs/calibration.md): {@code
+   * PIGEON_2.can(CANIVORE, 1).yawScale(1.0012)}.
+   *
+   * <p>Check every ID in Tuner X. Measure each zero by "Zeroing a swerve module"
+   * (runtime/docs/tuner-x.md). Directions, chassis on blocks: driving forward slowly, every wheel
+   * rolls forward; asked for a small turn, every module settles; turned counterclockwise by hand,
+   * seen from above, SteerAngleRotations grows. A device that fails its check gets {@code
+   * .clockwise()}, or loses it.
+   *
+   * <p>It's driven as {@link #BENCH} says, gently, for the bench.
+   */
+  public static final DrivetrainGeometry DRIVETRAIN =
+      DrivetrainGeometry.uniform(MODULE, Inches.of(10.375), Inches.of(10.375))
+          // Unconfirmed: the Pigeon 2's CAN ID.
+          .gyro(PIGEON_2.can(CANIVORE, 1))
+          // Unconfirmed: the steering motors' and the CANcoders' directions (none clockwise).
+          // Unconfirmed: front left's three IDs, its zero, and its drive's direction.
+          .frontLeft(
+              TALON_FX.can(CANIVORE, 23),
+              TALON_FX.can(CANIVORE, 24),
+              CANCODER.can(CANIVORE, 12).offset(Rotations.of(0.10693359375)))
+          // Unconfirmed: front right's three IDs, its zero, and its drive's direction.
+          .frontRight(
+              TALON_FX.can(CANIVORE, 21).clockwise(),
+              TALON_FX.can(CANIVORE, 22),
+              CANCODER.can(CANIVORE, 11).offset(Rotations.of(-0.031494140625)))
+          // Unconfirmed: back left's three IDs, its zero, and its drive's direction.
+          .backLeft(
+              TALON_FX.can(CANIVORE, 25),
+              TALON_FX.can(CANIVORE, 26),
+              CANCODER.can(CANIVORE, 13).offset(Rotations.of(-0.12939453125)))
+          // Unconfirmed: back right's three IDs, its zero, and its drive's direction.
+          .backRight(
+              TALON_FX.can(CANIVORE, 27).clockwise(),
+              TALON_FX.can(CANIVORE, 28),
+              CANCODER.can(CANIVORE, 14).offset(Rotations.of(-0.38427734375)))
+          .control(BENCH);
+
+  /**
    * The chassis as the program runs it: {@code ./gradlew run -Probot=driving} chooses it by name
-   * ({@link Robots#current}). Its cameras' and pose estimator's settings are the template's own: it
-   * has no cameras.
+   * ({@link Robots#current}).
+   *
+   * <p>Its frame is about 26 inches square, from where the 2026 robot's code puts its modules,
+   * 10.375 inches from the middle each way, with a module's wheel 2.625 inches in from the frame's
+   * edge. Measure it and change it if it's different. It has no bumpers on the bench, so the
+   * program takes the usual 3 inch ones, which only place it on the field and in the simulator, and
+   * says so at startup.
+   *
+   * <p>It hasn't been weighed yet, so the weight is left out and the program takes it as heavy as
+   * the season allows, and says so at startup. Weigh it with its battery on, and add what the scale
+   * says: {@code .weight(Pounds.of(42.5))}. How hard it is to spin isn't measured either, so the
+   * model works it out as a solid box's of that weight and size.
+   *
+   * <p>Its Pigeon 2 is the drivetrain's, taken as sitting in the middle, level, until its place is
+   * measured: {@code PIGEON_2.can(CANIVORE, 1).at(mount)}. No backup IMU: that's Systemcore's own,
+   * and the chassis has no Systemcore yet. Its cameras' and pose estimator's settings are the
+   * template's own.
    */
   public static final RobotConfig CONFIG =
-      RobotConfig.builder()
-          .definition(ROBOT.with(DRIVETRAIN.control(BENCH)))
-          .vision(VisionConfig.DEFAULTS)
-          .estimator(EstimatorConfig.DEFAULTS)
-          .build();
+      RobotConfig.of(
+          RobotDefinition.builder()
+              .name("driving")
+              .body(
+                  Body.builder()
+                      .frameLength(Inches.of(26))
+                      .frameWidth(Inches.of(26))
+                      .overallHeight(Inches.of(8))
+                      .build())
+              .drivetrain(DRIVETRAIN)
+              .build());
 }

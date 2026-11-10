@@ -3,15 +3,10 @@ package frc.robot;
 import static org.wpilib.units.Units.Degrees;
 import static org.wpilib.units.Units.Hertz;
 import static org.wpilib.units.Units.Inches;
-import static org.wpilib.units.Units.Meters;
-import static org.wpilib.units.Units.Milliseconds;
 
 import com.michaelgrundvig.frc.runtime.RobotConfig;
-import com.michaelgrundvig.frc.runtime.RobotConfigBuilder;
 import com.michaelgrundvig.frc.world.robot.CameraConfig;
 import com.michaelgrundvig.frc.world.robot.CameraConfig.Software;
-import com.michaelgrundvig.frc.world.robot.RobotDefinitionBuilder;
-import java.util.List;
 
 /**
  * The driving robot with the two vision coprocessors and their ThriftyCams, for proving the vision
@@ -47,19 +42,11 @@ public final class VisionBenchRobot {
 
   /**
    * A ThriftyCam at the size and rate it runs at, from {@code visor cameras}: 1600x1304 at 60. Its
-   * lens is sold as 80°, but the four cameras' calibrations (2026-11-04, {@link ThriftyCamLenses})
-   * put it at 73° to 74° across the diagonal, so 73°.
+   * field of view comes from each camera's lens ({@link ThriftyCamLenses}): sold as 80°, the four
+   * calibrations of 2026-11-04 put it at 73° to 74° across the diagonal. Its latency is Visor's
+   * typical one until the Vision log measures it, and the robot says so at startup.
    */
-  static final CameraConfig.Sensor THRIFTYCAM =
-      CameraConfig.Sensor.builder()
-          .widthPixels(1600)
-          .heightPixels(1304)
-          .fieldOfView(Degrees.of(73))
-          .fieldOfViewAcross(CameraConfig.Across.DIAGONAL)
-          .frameRate(Hertz.of(60))
-          .latency(Milliseconds.of(20))
-          .sightRange(Meters.of(7))
-          .build();
+  static final CameraConfig.Sensor THRIFTYCAM = CameraConfig.Sensor.of(1600, 1304, Hertz.of(60));
 
   // The two cameras are the ones labelled 1 and 2, plugged into the boards on 2026-11-04, and each
   // takes its own lens from ThriftyCamLenses. The four lenses' centers differ by up to about 100
@@ -75,15 +62,12 @@ public final class VisionBenchRobot {
   static final CameraConfig CAMERA_2 =
       camera("two", Inches.of(-4), CAMERA_2_DEVICE, ThriftyCamLenses.CAM_2);
 
+  /** The driving robot with the two cameras and the boards they're plugged into. */
   public static final RobotConfig CONFIG =
-      RobotConfigBuilder.builder(DrivingRobot.CONFIG)
-          .definition(
-              RobotDefinitionBuilder.builder(DrivingRobot.CONFIG.definition())
-                  .name("vision-bench")
-                  .cameras(List.of(CAMERA_1, CAMERA_2))
-                  .build())
-          .coprocessors(List.of(VISION_1, VISION_2))
-          .build();
+      DrivingRobot.CONFIG
+          .named("vision-bench")
+          .withCameras(CAMERA_1, CAMERA_2)
+          .withCoprocessors(VISION_1, VISION_2);
 
   private static CameraConfig camera(
       String name, org.wpilib.units.measure.Distance left, String device, Software.Lens lens) {
@@ -92,11 +76,9 @@ public final class VisionBenchRobot {
         .forward(Inches.of(12))
         .left(left)
         .up(Inches.of(7))
-        .roll(Degrees.of(0))
         .tiltUp(Degrees.of(0))
         .yaw(Degrees.of(0))
         .sensor(THRIFTYCAM)
-        .noiseScale(1.0)
         .software(Software.visor().device(device).lens(lens).build())
         .build();
   }

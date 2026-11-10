@@ -29,11 +29,13 @@ class DrivingRobotTest {
 
   @Test
   void itFitsTheSeasonAndHasOnlyADrivetrain() {
-    assertThat(Rebuilt.LIMITS.problems(DrivingRobot.ROBOT)).isEmpty();
-    assertThat(DrivingRobot.ROBOT.cameras()).isEmpty();
-    assertThat(DrivingRobot.ROBOT.joints()).isEmpty();
-    assertThat(DrivingRobot.ROBOT.pdh()).isEmpty();
-    assertThat(DrivingRobot.ROBOT.backupImu()).as("no Systemcore, so no backup IMU").isEmpty();
+    assertThat(Rebuilt.LIMITS.problems(DrivingRobot.CONFIG.definition())).isEmpty();
+    assertThat(DrivingRobot.CONFIG.definition().cameras()).isEmpty();
+    assertThat(DrivingRobot.CONFIG.definition().joints()).isEmpty();
+    assertThat(DrivingRobot.CONFIG.definition().pdh()).isEmpty();
+    assertThat(DrivingRobot.CONFIG.definition().backupImu())
+        .as("no Systemcore, so no backup IMU")
+        .isEmpty();
     assertThat(Robots.asked(java.util.Optional.of("driving"))).isSameAs(DrivingRobot.CONFIG);
   }
 
@@ -59,7 +61,7 @@ class DrivingRobotTest {
     assertThat(limits.driveStatorCurrent().in(Amps)).isLessThanOrEqualTo(20);
     assertThat(limits.driveSupplyCurrent().in(Amps)).isLessThanOrEqualTo(20);
     assertThat(limits.steerStatorCurrent().in(Amps)).isLessThanOrEqualTo(20);
-    assertThat(limits.maxLinearSpeed().in(MetersPerSecond)).isLessThanOrEqualTo(1.5);
+    assertThat(limits.maxLinearSpeed().orElseThrow().in(MetersPerSecond)).isLessThanOrEqualTo(1.5);
   }
 
   /**
