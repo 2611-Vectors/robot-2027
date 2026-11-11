@@ -13,7 +13,8 @@ do.
 > robot. The team has the real ones from its bench session and brings them over, with a record of
 > the session in `src/test/resources/driving-tuner-x.json` for the tests to check them against
 > (`DrivingRobotRecordTest`). Until then, the program won't drive the real robot correctly, and
-> `./gradlew deploy` refuses while any value is still marked unconfirmed.
+> `./gradlew deploy` refuses while any value is still marked unconfirmed (`./gradlew
+> unconfirmedValues` lists them).
 
 ## The robots
 
