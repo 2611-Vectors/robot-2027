@@ -192,9 +192,6 @@ public final class DrivingRobot {
    */
   public static final RobotConfig CONFIG =
       RobotConfig.of(
-          RobotDefinition.builder()
-              .name("driving")
-              .body(Body.frame(Inches.of(26), Inches.of(26), Inches.of(8)))
-              .drivetrain(DRIVETRAIN)
-              .build());
+          RobotDefinition.of(
+              "driving", Body.frame(Inches.of(26), Inches.of(26), Inches.of(8)), DRIVETRAIN));
 }
