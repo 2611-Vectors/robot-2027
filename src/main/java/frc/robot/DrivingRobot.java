@@ -13,8 +13,8 @@ import static org.wpilib.units.Units.RotationsPerSecond;
 import com.michaelgrundvig.frc.runtime.RobotConfig;
 import com.michaelgrundvig.frc.world.robot.Body;
 import com.michaelgrundvig.frc.world.robot.CanBus;
+import com.michaelgrundvig.frc.world.robot.Drivetrain;
 import com.michaelgrundvig.frc.world.robot.DrivetrainControl;
-import com.michaelgrundvig.frc.world.robot.DrivetrainGeometry;
 import com.michaelgrundvig.frc.world.robot.Gearing;
 import com.michaelgrundvig.frc.world.robot.Motor;
 import com.michaelgrundvig.frc.world.robot.RobotDefinition;
@@ -91,8 +91,8 @@ public final class DrivingRobot {
    * <p>How hard the wheel and the steering are to spin up, 0.01 kg m² each, is Tuner X's guess,
    * which only the simulator uses.
    */
-  public static final DrivetrainGeometry.ModuleType MODULE =
-      DrivetrainGeometry.ModuleType.builder()
+  public static final Drivetrain.Module MODULE =
+      Drivetrain.Module.builder()
           .driveMotor(Motor.KRAKEN_X60)
           .steerMotor(STEER_MOTOR)
           .wheelRadius(Inches.of(2))
@@ -143,8 +143,8 @@ public final class DrivingRobot {
    *
    * <p>It's driven as {@link #BENCH} says, gently, for the bench.
    */
-  public static final DrivetrainGeometry DRIVETRAIN =
-      DrivetrainGeometry.uniform(MODULE, Inches.of(10.375), Inches.of(10.375))
+  public static final Drivetrain DRIVETRAIN =
+      Drivetrain.uniform(MODULE, Inches.of(10.375), Inches.of(10.375))
           // Unconfirmed: the Pigeon 2's CAN ID.
           .gyro(PIGEON_2.can(CANIVORE, 1))
           // Unconfirmed: the steering motors' and the CANcoders' directions (none clockwise).

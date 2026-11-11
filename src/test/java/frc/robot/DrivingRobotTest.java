@@ -75,7 +75,7 @@ class DrivingRobotTest {
     List<String> lines = Files.readAllLines(SOURCE);
     int start = indexOf(lines, "// ==== CHECK THESE ON THE CHASSIS");
     int end = indexOf(lines, "// ==== END OF THE VALUES TO CHECK");
-    int drivetrain = indexOf(lines, "public static final DrivetrainGeometry DRIVETRAIN =");
+    int drivetrain = indexOf(lines, "public static final Drivetrain DRIVETRAIN =");
     int drivetrainEnd = endOfStatement(lines, drivetrain);
 
     assertThat(start).isPositive().isLessThan(end).isLessThan(drivetrain);
