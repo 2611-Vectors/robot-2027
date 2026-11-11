@@ -72,15 +72,9 @@ public final class VisionBenchRobot {
 
   private static CameraConfig camera(
       String name, org.wpilib.units.measure.Distance left, String device, Software.Lens lens) {
-    return CameraConfig.builder()
-        .name(name)
-        .forward(Inches.of(12))
-        .left(left)
-        .up(Inches.of(7))
-        .tiltUp(Degrees.of(0))
-        .yaw(Degrees.of(0))
-        .sensor(THRIFTYCAM)
-        .software(Software.visor().device(device).lens(lens))
-        .build();
+    return CameraConfig.of(name, THRIFTYCAM)
+        .at(Inches.of(12), left, Inches.of(7))
+        .facing(Degrees.of(0), Degrees.of(0))
+        .software(Software.visor().device(device).lens(lens));
   }
 }
