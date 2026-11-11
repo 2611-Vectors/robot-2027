@@ -194,12 +194,7 @@ public final class DrivingRobot {
       RobotConfig.of(
           RobotDefinition.builder()
               .name("driving")
-              .body(
-                  Body.builder()
-                      .frameLength(Inches.of(26))
-                      .frameWidth(Inches.of(26))
-                      .overallHeight(Inches.of(8))
-                      .build())
+              .body(Body.frame(Inches.of(26), Inches.of(26), Inches.of(8)))
               .drivetrain(DRIVETRAIN)
               .build());
 }
