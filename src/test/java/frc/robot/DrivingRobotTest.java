@@ -5,7 +5,9 @@ import static org.wpilib.units.Units.Amps;
 import static org.wpilib.units.Units.MetersPerSecond;
 
 import com.michaelgrundvig.frc.world.game.Rebuilt;
+import com.michaelgrundvig.frc.world.robot.Drivetrain;
 import com.michaelgrundvig.frc.world.robot.DrivetrainControl;
+import com.michaelgrundvig.frc.world.robot.MechanismWiring;
 import com.michaelgrundvig.frc.world.robot.Motor;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -46,8 +48,10 @@ class DrivingRobotTest {
   @Test
   void itNeedsNoPhoenixPro() {
     assertThat(List.of(DrivingRobot.MODULE.driveMotor(), DrivingRobot.MODULE.steerMotor()))
-        .containsExactly(Motor.KRAKEN_X60, DrivingRobot.STEER_MOTOR)
-        .noneMatch(motor -> motor.name().contains("FOC"));
+        .containsExactly(Motor.KRAKEN_X60, DrivingRobot.STEER_MOTOR);
+    Drivetrain drivetrain = DrivingRobot.CONFIG.definition().drivetrain();
+    assertThat(List.of(drivetrain.driveCommutation(), drivetrain.steerCommutation()))
+        .containsOnly(MechanismWiring.Commutation.TRAPEZOIDAL);
   }
 
   /**
