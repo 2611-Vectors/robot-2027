@@ -46,7 +46,8 @@ public final class VisionBenchRobot {
    * calibrations of 2026-11-04 put it at 73° to 74° across the diagonal. Its latency is Visor's
    * typical one until the Vision log measures it, and the robot says so at startup.
    */
-  static final CameraConfig.Sensor THRIFTYCAM = CameraConfig.Sensor.of(1600, 1304, Hertz.of(60));
+  static final CameraConfig.ImageSensor THRIFTYCAM =
+      CameraConfig.ImageSensor.of(1600, 1304, Hertz.of(60));
 
   // The two cameras are the ones labelled 1 and 2, plugged into the boards on 2026-11-04, and each
   // takes its own lens from ThriftyCamLenses. The four lenses' centers differ by up to about 100
