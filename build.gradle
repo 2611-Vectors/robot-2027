@@ -185,7 +185,9 @@ tasks.named("test") {
     def goldenUpdate = providers.environmentVariable("GOLDEN_UPDATE").orElse("")
     inputs.property("goldenUpdate", goldenUpdate)
     outputs.upToDateWhen { goldenUpdate.get() != "1" }
-    outputs.doNotCacheIf("GOLDEN_UPDATE rewrites src/test/resources") { goldenUpdate.get() == "1" }
+    outputs.doNotCacheIf("GOLDEN_UPDATE rewrites src/test/resources") {
+        goldenUpdate.get() == "1"
+    }
     doFirst { work.get().asFile.mkdirs() }
 }
 
@@ -298,7 +300,9 @@ def unconfirmedValues = tasks.register("unconfirmedValues") {
 }
 // Before every step of a deploy, from finding the robot on, so nothing is copied to it first:
 // GradleRIO's deploy runs each step as a task of its own, and "deploy" itself comes last.
-tasks.matching { it.name.startsWith("deploy") || it.name.startsWith("discover") }.configureEach {
+tasks.matching {
+    it.name.startsWith("deploy") || it.name.startsWith("discover")
+}.configureEach {
     dependsOn unconfirmedValues
 }
 
