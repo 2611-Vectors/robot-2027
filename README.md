@@ -44,8 +44,11 @@ Java the robot code needs, so no WPILib installer is needed to build, test or si
 The team number, 2611, is already stored (`.wpilib/wpilib_preferences.json`).
 
 In IntelliJ, pick **Simulator** in the run menu at the top right and press the green arrow: it
-starts the simulator the same way, without the formatting step (`./gradlew run -Pquick`). Then open
-http://localhost:5820/#sim to drive it.
+starts the simulator the same way, without the formatting step (`./gradlew run -Pquick`). No window
+opens: the simulator is driven from a web page, so open http://localhost:5820/#sim once the Run
+panel says `Robot program startup complete`. **Simulator with WPILib window** is the same with
+WPILib's own simulator window as well (`-Pgui`); the robot starts enabled there, and while that
+window is open its joysticks are the ones that count.
 
 ## Driving the real robot from a laptop
 
