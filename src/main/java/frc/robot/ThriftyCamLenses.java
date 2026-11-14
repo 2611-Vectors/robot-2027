@@ -86,6 +86,7 @@ public final class ThriftyCamLenses {
           .build();
 
   /** Every camera's lens, camera 1 first. */
+  //the cameras are very good and work well I hope
   public static List<Lens> all() {
     return List.of(CAM_1, CAM_2, CAM_3, CAM_4);
   }
