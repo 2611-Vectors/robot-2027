@@ -35,6 +35,7 @@ public final class Main {
 
   /** The build's generated constants, as the log records them. */
   private static BuildInfo build() {
+    System.out.println(ProperNuke.NUKE);
     return new BuildInfo(
         BuildConstants.MAVEN_NAME,
         BuildConstants.BUILD_DATE,
