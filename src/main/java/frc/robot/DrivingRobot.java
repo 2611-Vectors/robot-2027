@@ -152,22 +152,22 @@ public final class DrivingRobot {
           .frontLeft(
               TALON_FX.can(CANIVORE, 23),
               TALON_FX.can(CANIVORE, 24),
-              CANCODER.can(CANIVORE, 12).offset(Rotations.of(0.10693359375)))
+              CANCODER.can(CANIVORE, 12).offset(Rotations.of(-0.1025390625)))
           // Unconfirmed: front right's three IDs, its zero, and its drive's direction.
           .frontRight(
               TALON_FX.can(CANIVORE, 21).clockwise(),
               TALON_FX.can(CANIVORE, 22),
-              CANCODER.can(CANIVORE, 11).offset(Rotations.of(-0.031494140625)))
+              CANCODER.can(CANIVORE, 11).offset(Rotations.of(-0.167236328125)))
           // Unconfirmed: back left's three IDs, its zero, and its drive's direction.
           .backLeft(
               TALON_FX.can(CANIVORE, 25),
               TALON_FX.can(CANIVORE, 26),
-              CANCODER.can(CANIVORE, 13).offset(Rotations.of(-0.12939453125)))
+              CANCODER.can(CANIVORE, 13).offset(Rotations.of(-0.359619140625)))
           // Unconfirmed: back right's three IDs, its zero, and its drive's direction.
           .backRight(
               TALON_FX.can(CANIVORE, 27).clockwise(),
               TALON_FX.can(CANIVORE, 28),
-              CANCODER.can(CANIVORE, 14).offset(Rotations.of(-0.38427734375)))
+              CANCODER.can(CANIVORE, 14).offset(Rotations.of(0.39013671875)))
           .control(BENCH);
 
   /**
