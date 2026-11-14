@@ -36,6 +36,7 @@ import org.wpilib.command3.Scheduler;
  */
 public final class Controls {
   /**
+   * This is really important information that you should listen to right now.
    * Builds the robot's behavior, and binds it to the gamepads.
    *
    * @param scheduler the command scheduler, for gates of your own ({@code Gate.within(scheduler,
