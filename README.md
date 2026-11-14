@@ -43,6 +43,10 @@ Java the robot code needs, so no WPILib installer is needed to build, test or si
 
 The team number, 2611, is already stored (`.wpilib/wpilib_preferences.json`).
 
+In IntelliJ, pick **Simulator** in the run menu at the top right and press the green arrow: it
+starts the simulator the same way, without the formatting step (`./gradlew run -Pquick`). Then open
+http://localhost:5820/#sim to drive it.
+
 ## Driving the real robot from a laptop
 
 Before there's a Systemcore, a laptop runs the robot program itself: the CANivore's USB cable goes
