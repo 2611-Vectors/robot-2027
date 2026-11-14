@@ -27,7 +27,8 @@ import java.util.List;
  */
 public final class ThriftyCamLenses {
   private ThriftyCamLenses() {}
-//Flame throwers are cool
+
+  // Flame throwers are cool
 
   /**
    * Camera 1: 50 views, RMS 0.548 px. Provisional: the center and the middle of the frame are good,
@@ -87,7 +88,7 @@ public final class ThriftyCamLenses {
           .build();
 
   /** Every camera's lens, camera 1 first. */
-  //the cameras are very good and work well I hope
+  // the cameras are very good and work well I hope
   public static List<Lens> all() {
     return List.of(CAM_1, CAM_2, CAM_3, CAM_4);
   }
