@@ -97,7 +97,7 @@ public final class DrivingRobot {
           .steerMotor(STEER_MOTOR)
           .wheelRadius(Inches.of(2))
           .driveGearing(Gearing.of(DRIVE_GEAR_RATIO))
-          .steerGearing(Gearing.of(287.0 / 11.0))
+          .steerGearing(Gearing.of(150.0 / 7.0))
           .couplingRatio(DRIVE_GEAR_RATIO / (25.0 / 16.0))
           .driveInertia(KilogramSquareMeters.of(0.01))
           .steerInertia(KilogramSquareMeters.of(0.01))
@@ -151,22 +151,22 @@ public final class DrivingRobot {
           // Unconfirmed: front left's three IDs, its zero, and its drive's direction.
           .frontLeft(
               TALON_FX.can(CANIVORE, 23),
-              TALON_FX.can(CANIVORE, 24),
+              TALON_FX.can(CANIVORE, 24).clockwise(),
               CANCODER.can(CANIVORE, 12).offset(Rotations.of(-0.1025390625)))
           // Unconfirmed: front right's three IDs, its zero, and its drive's direction.
           .frontRight(
               TALON_FX.can(CANIVORE, 21).clockwise(),
-              TALON_FX.can(CANIVORE, 22),
+              TALON_FX.can(CANIVORE, 22).clockwise(),
               CANCODER.can(CANIVORE, 11).offset(Rotations.of(-0.167236328125)))
           // Unconfirmed: back left's three IDs, its zero, and its drive's direction.
           .backLeft(
               TALON_FX.can(CANIVORE, 25),
-              TALON_FX.can(CANIVORE, 26),
+              TALON_FX.can(CANIVORE, 26).clockwise(),
               CANCODER.can(CANIVORE, 13).offset(Rotations.of(-0.359619140625)))
           // Unconfirmed: back right's three IDs, its zero, and its drive's direction.
           .backRight(
               TALON_FX.can(CANIVORE, 27).clockwise(),
-              TALON_FX.can(CANIVORE, 28),
+              TALON_FX.can(CANIVORE, 28).clockwise(),
               CANCODER.can(CANIVORE, 14).offset(Rotations.of(0.39013671875)))
           .control(BENCH);
 
