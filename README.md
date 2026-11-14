@@ -50,6 +50,12 @@ panel says `Robot program startup complete`. **Simulator with WPILib window** is
 WPILib's own simulator window as well (`-Pgui`); the robot starts enabled there, and while that
 window is open its joysticks are the ones that count.
 
+Neither of those touches the real robot: both run simulated motors, so the robot on the bench
+stays still however the sticks move. To drive the real motors from a laptop, pick **Real robot
+from this laptop (motors move)** (`./gradlew run -PhwSim -Pquick`), with the CANivore's USB cable
+in the laptop. Read the safety checklist first (below, and the bench guide): wheels off the
+ground, a hand on the breaker.
+
 ## Driving the real robot from a laptop
 
 Before there's a Systemcore, a laptop runs the robot program itself: the CANivore's USB cable goes
