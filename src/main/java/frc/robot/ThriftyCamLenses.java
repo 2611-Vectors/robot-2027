@@ -27,6 +27,7 @@ import java.util.List;
  */
 public final class ThriftyCamLenses {
   private ThriftyCamLenses() {}
+//Flame throwers are cool
 
   /**
    * Camera 1: 50 views, RMS 0.548 px. Provisional: the center and the middle of the frame are good,
