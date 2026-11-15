@@ -195,4 +195,3 @@ public final class DrivingRobot {
           RobotDefinition.of(
               "driving", Body.frame(Inches.of(26), Inches.of(26), Inches.of(8)), DRIVETRAIN));
 }
-// Oreos are tasty.
