@@ -13,6 +13,11 @@ plugins {
     // version (settings.gradle's pluginManagement finds it). A team that doesn't use AdvantageScope
     // removes this line, and nothing of it runs.
     alias(libs.plugins.frc.advantagescope.assets)
+    // Each robot's pre-competition checklist (checklists/), made from Robots.java by every build,
+    // the same way the AdvantageScope assets are: which camera goes in each station, by the number
+    // on its label and the end of its serial, and what to check in the pit and on the field.
+    // Print it before an event. Don't edit it by hand: the next build writes over it.
+    alias(libs.plugins.frc.competition.checklist)
     // Visor, the AprilTag vision program for the coprocessors: its release and Spotter pack in the
     // robot's deploy, for the robot to install on the coprocessors its Robots.java entry lists
     // (runtime/docs/visor.md). A robot with no coprocessors never uses it.

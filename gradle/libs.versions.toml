@@ -45,4 +45,5 @@ gradlerio = { id = "org.wpilib.GradleRIO", version.ref = "gradlerio" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 errorprone = { id = "net.ltgt.errorprone", version.ref = "errorprone-plugin" }
 frc-advantagescope-assets = { id = "frc.advantagescope-assets", version.ref = "frc-libs" }
+frc-competition-checklist = { id = "frc.competition-checklist", version.ref = "frc-libs" }
 frc-visor = { id = "frc.visor", version.ref = "frc-libs" }
