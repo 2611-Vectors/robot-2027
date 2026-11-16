@@ -28,6 +28,13 @@ They're in `src/main/java/frc/robot/`: `Robots.java` lists them and says which o
 robot does, its commands, buttons and autos. It's empty so far: the driver's sticks drive, and the
 back button resets the heading.
 
+The cameras are in `ThriftyCams.java`: the camera type, and each of the four ThriftyCams by the
+number on its label, with its device (its USB serial) and its lens written together, so a camera
+always carries its own lens. A robot puts a camera in a station, a named place on the robot:
+`BENCH_LEFT.holds(ThriftyCams.CAMERA_1)`. Swapping a camera is changing which camera a station
+holds. Each robot's pre-competition checklist, which camera goes in each station and what to check
+in the pit and on the field, is in `checklists/`, made by the build: print it, don't edit it.
+
 ## Quick start
 
 You need git and any Java installation, to start the Gradle wrapper. Gradle downloads the exact

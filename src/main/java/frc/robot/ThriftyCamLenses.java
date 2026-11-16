@@ -1,6 +1,6 @@
 package frc.robot;
 
-import com.michaelgrundvig.frc.world.robot.CameraConfig.Software.Lens;
+import com.michaelgrundvig.frc.world.robot.Lens;
 import java.util.List;
 
 /**
@@ -8,7 +8,9 @@ import java.util.List;
  * the four differ by up to about 100 pixels in where their image's center falls (about 4° of
  * pointing), and that's real, each lens sitting a little off its sensor's middle, not an error in
  * the calibration. So a camera moved to another robot or board takes its own lens with it, and a
- * camera that's refocused, dropped hard or has its lens turned is calibrated again.
+ * camera that's refocused, dropped hard or has its lens turned is calibrated again. Each lens is
+ * paired with its camera's number and device in {@link ThriftyCams}, and the cameras are told apart
+ * by their USB serials since their firmware update of 2026-11-15.
  *
  * <p>Each camera's frames were taken on 2026-11-04, on a laptop with the camera plugged in, at
  * 1600x1304 (the size the cameras run at), its focus set for 2 to 4 m and locked first. The board
@@ -72,7 +74,9 @@ public final class ThriftyCamLenses {
 
   /**
    * Camera 4: 50 views, RMS 0.627 px. Provisional: the center and the middle of the frame are good,
-   * the edges weren't covered. Calibrate it again, the board reaching every corner of the frame.
+   * the edges weren't covered. Camera 4 was refocused on 2026-11-15, so these numbers are from its
+   * old focus: calibrate it again, the board reaching every corner of the frame, before its poses
+   * are trusted.
    */
   public static final Lens CAM_4 =
       Lens.builder()

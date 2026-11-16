@@ -2,8 +2,9 @@ package frc.robot;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.michaelgrundvig.frc.world.robot.Camera;
 import com.michaelgrundvig.frc.world.robot.CameraConfig;
-import com.michaelgrundvig.frc.world.robot.CameraConfig.Software.Lens;
+import com.michaelgrundvig.frc.world.robot.Lens;
 import io.avaje.jsonb.Jsonb;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -20,7 +20,8 @@ import org.junit.jupiter.api.Test;
  * calibration results ({@code src/test/resources/thriftycam-lenses.json}), so a number mistyped or
  * pasted into the wrong camera fails; each at the size the cameras run at, so the build takes it
  * for a camera of that size; and each one plausible for the ThriftyCam's lens, so a record that's
- * wrong itself still fails. Then the bench robot's two cameras, each with its own lens.
+ * wrong itself still fails. Then each camera in {@link ThriftyCams} with the lens of its own
+ * number, and the bench robot's two stations holding cameras 1 and 2.
  */
 class ThriftyCamLensesTest {
   /** The record of the calibration results, as Visor's calibration tool gave them. */
@@ -50,8 +51,8 @@ class ThriftyCamLensesTest {
   @Test
   void everyLensIsAtTheCamerasSizeAndPlausible() {
     for (Lens lens : ThriftyCamLenses.all()) {
-      assertThat(lens.width()).isEqualTo(VisionBenchRobot.THRIFTYCAM.widthPixels());
-      assertThat(lens.height()).isEqualTo(VisionBenchRobot.THRIFTYCAM.heightPixels());
+      assertThat(lens.width()).isEqualTo(ThriftyCams.THRIFTYCAM.sensor().widthPixels());
+      assertThat(lens.height()).isEqualTo(ThriftyCams.THRIFTYCAM.sensor().heightPixels());
       // About a 73° diagonal field of view: a focal length near 1380 px at this size.
       assertThat(lens.fx()).isBetween(1300.0, 1450.0);
       assertThat(lens.fy() / lens.fx()).isBetween(0.99, 1.01);
@@ -64,20 +65,32 @@ class ThriftyCamLensesTest {
     }
   }
 
-  /** Camera "one" is the camera labelled 1, and "two" the camera labelled 2. */
+  /**
+   * Each camera carries the lens of its own number, the point of writing them together: camera 1
+   * has camera 1's lens, and so on. Each has a serial of its own, which tells it apart wherever
+   * it's plugged in.
+   */
   @Test
-  void theBenchsCamerasTakeTheirOwnLenses() {
-    assertThat(VisionBenchRobot.CAMERA_1.name()).isEqualTo("one");
-    assertThat(lensOf(VisionBenchRobot.CAMERA_1)).contains(ThriftyCamLenses.CAM_1);
-    assertThat(VisionBenchRobot.CAMERA_2.name()).isEqualTo("two");
-    assertThat(lensOf(VisionBenchRobot.CAMERA_2)).contains(ThriftyCamLenses.CAM_2);
+  void eachCameraCarriesTheLensOfItsOwnNumber() {
+    List<Lens> lenses = ThriftyCamLenses.all();
+    List<Camera> cameras = ThriftyCams.all();
+    assertThat(cameras).extracting(Camera::number).containsExactly(1, 2, 3, 4);
+    for (Camera camera : cameras) {
+      assertThat(camera.lens())
+          .as("camera %d", camera.number())
+          .contains(lenses.get(camera.number() - 1));
+      assertThat(camera.serial()).as("camera %d's serial", camera.number()).isPresent();
+    }
+    assertThat(cameras.stream().map(Camera::serial).distinct()).hasSize(4);
   }
 
-  private static Optional<Lens> lensOf(CameraConfig camera) {
-    if (camera.software() instanceof CameraConfig.Software.Visor visor) {
-      return visor.lens();
-    }
-    return Optional.empty();
+  /** The bench's stations hold cameras 1 and 2, each with its own lens. */
+  @Test
+  void theBenchsStationsHoldCameras1And2() {
+    List<CameraConfig> bench = VisionBenchRobot.CONFIG.definition().cameras();
+    assertThat(bench).extracting(CameraConfig::name).containsExactly("bench-left", "bench-right");
+    assertThat(bench.get(0).camera()).isEqualTo(ThriftyCams.CAMERA_1);
+    assertThat(bench.get(1).camera()).isEqualTo(ThriftyCams.CAMERA_2);
   }
 
   @SuppressWarnings("unchecked")
