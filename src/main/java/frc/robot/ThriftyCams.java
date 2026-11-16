@@ -26,14 +26,16 @@ public final class ThriftyCams {
    * A ThriftyCam, at the size and rate the team runs it: 1600 x 1304 at 60 frames a second. Its
    * exposure is the library's default, a fixed 1 ms, which keeps tags sharp while the robot turns.
    *
-   * <p>Its gain starts at 160. The cameras' firmware 5.10 takes a gain from 16 to 255. One sweep on
-   * 2026-11-15, in a dim room at 1 ms, read every tag from a gain of 118 up. 160 was chosen as a
-   * starting point that still reads tags in a room that dim and sits in the middle of the range in
-   * light three to four times brighter. Each venue adjusts it from there, in the pit, and keeps its
-   * own value.
+   * <p>Its gain starts at 160. The cameras' firmware 5.10 takes a gain from 16 to 255, the range
+   * written below, so the pit's tuning stays inside it. One sweep on 2026-11-15, in a dim room at 1
+   * ms, read every tag from a gain of 118 up. 160 was chosen as a starting point that still reads
+   * tags in a room that dim and sits in the middle of the range in light three to four times
+   * brighter. Each venue adjusts it from there, in the pit, and keeps its own value.
    */
   public static final CameraType THRIFTYCAM =
-      CameraType.of("ThriftyCam", ImageSensor.of(1600, 1304, Hertz.of(60))).gain(160);
+      CameraType.of("ThriftyCam", ImageSensor.of(1600, 1304, Hertz.of(60)))
+          .gain(160)
+          .gainRange(16, 255);
 
   /** Camera 1. */
   public static final Camera CAMERA_1 =
