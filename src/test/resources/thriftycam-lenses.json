@@ -40,7 +40,7 @@
     {
       "camera": 4,
       "verdict": "provisional",
-      "solved": "cam4: 50 views, RMS 0.627 px, provisional: edges not covered, k3 held at 0 (its corners can't decide k3)",
+      "solved": "cam4: 50 views, RMS 0.627 px, provisional: edges not covered, k3 held at 0 (its corners can't decide k3). Camera 4 was refocused on 2026-11-15, after this calibration: these numbers are from its old focus, so calibrate it again before trusting its poses",
       "width": 1600,
       "height": 1304,
       "fx": 1380.886019,

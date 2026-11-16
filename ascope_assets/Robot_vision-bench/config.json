@@ -19,7 +19,7 @@
   ],
   "cameras": [
     {
-      "name": "one",
+      "name": "bench-left",
       "rotations": [
         {
           "axis": "x",
@@ -46,7 +46,7 @@
       "fov": 61.75501
     },
     {
-      "name": "two",
+      "name": "bench-right",
       "rotations": [
         {
           "axis": "x",
